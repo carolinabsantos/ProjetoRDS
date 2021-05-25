@@ -4,7 +4,7 @@
 
 const bit<8>  TCP_PROTOCOL = 0x06;
 const bit<16> TYPE_IPV4 = 0x800;
-const bit<19> ECN_THRESHOLD = 10;
+const bit<16> TYPE_BROADCAST = 0x1234;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -124,10 +124,27 @@ control MyIngress(inout headers hdr,
         default_action = NoAction();
     }
 
+    action set_egress_port(egressSpec_t port_num) {
+        standard_metadata.egress_spec = port_num;
+    }
+
+    table L2_forwarding  {
+        key = {
+            hdr.ethernet.dstAddr: exact;
+        }
+        actions = {
+            set_egress_port;
+            NoAction;
+        }
+        size = 1024;
+        default_action = NoAction();
+    }
+
     apply {
         if (hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
         }
+        L2_forwarding.apply();
     }
 }
 
