@@ -4,6 +4,7 @@
 
 const bit<8>  TCP_PROTOCOL = 0x06;
 const bit<16> TYPE_IPV4 = 0x800;
+const bit<16> TYPE_ARP = 0x806;
 const bit<16> TYPE_BROADCAST = 0x1234;
 
 /*************************************************************************
@@ -73,13 +74,19 @@ parser MyParser(packet_in packet,
     state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
-            TYPE_IPV4: parse_ipv4;
+            TYPE_IPV4   : parse_ipv4;
+            TYPE_ARP    : parse_arp;
             default: accept;
         }
     }
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
+        transition accept;
+    }
+
+    state parse_arp {
+        packet.extract(hdr.arp);
         transition accept;
     }
 }
