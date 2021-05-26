@@ -4,8 +4,7 @@
 
 const bit<8>  TCP_PROTOCOL = 0x06;
 const bit<16> TYPE_IPV4 = 0x800;
-const bit<16> TYPE_ARP = 0x806;
-const bit<16> TYPE_BROADCAST = 0x1234;
+const bit<19> ECN_THRESHOLD = 10;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -74,19 +73,13 @@ parser MyParser(packet_in packet,
     state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
-            TYPE_IPV4   : parse_ipv4;
-            TYPE_ARP    : parse_arp;
+            TYPE_IPV4: parse_ipv4;
             default: accept;
         }
     }
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
-        transition accept;
-    }
-
-    state parse_arp {
-        packet.extract(hdr.arp);
         transition accept;
     }
 }
@@ -134,7 +127,7 @@ control MyIngress(inout headers hdr,
     action set_egress_port(egressSpec_t port_num) {
         standard_metadata.egress_spec = port_num;
     }
-
+    
     table L2_forwarding  {
         key = {
             hdr.ethernet.dstAddr: exact;
