@@ -16,7 +16,7 @@ import p4runtime_lib.helper
 
 
 def writeL3ForwardingRules(p4info_helper, ingress_sw, port,
-                     dst_eth_addr, dst_ip_addr):
+                     dst_eth_addr, dst_ip_addr, src_mac_addr):
     """
     Installs a forwarding rule
 
@@ -37,10 +37,12 @@ def writeL3ForwardingRules(p4info_helper, ingress_sw, port,
         action_name="MyIngress.ipv4_forward",
         action_params={
             "dstAddr"   : dst_eth_addr,
-            "port"      : port
+            "port"      : port,
+            "srcAddr"  : src_mac_addr
         })
     ingress_sw.WriteTableEntry(table_entry)
     print "Installed forwarding rule on %s" % ingress_sw.name
+
 
 def writeL2ForwardingRules(p4info_helper, ingress_sw, port, dst_eth_addr):
     """
@@ -140,53 +142,41 @@ def main(p4info_file_path, bmv2_file_path):
 
         # Write the rules that tunnel traffic from h1 to h2
         writeL3ForwardingRules(p4info_helper, ingress_sw=s1, port=1,
-                         dst_eth_addr="08:00:00:00:02:02", dst_ip_addr="10.0.2.20")
+                         dst_eth_addr="08:00:00:00:02:02", dst_ip_addr="10.0.2.20", src_mac_addr="08:00:00:00:01:01")
 
         # Write the rules that tunnel traffic from h1 to h3
         writeL3ForwardingRules(p4info_helper, ingress_sw=s1, port=2,
-                         dst_eth_addr="08:00:00:00:03:03", dst_ip_addr="10.0.100.30")
+                         dst_eth_addr="08:00:00:00:03:03", dst_ip_addr="10.0.100.30", src_mac_addr="08:00:00:00:01:01")
 
         # Write the rules that tunnel traffic from h1 to h4
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s1, port=2,
-                         dst_eth_addr="08:00:00:00:03:44", dst_ip_addr="10.0.100.40")
+        writeL3ForwardingRules(p4info_helper, ingress_sw=s1, port=1,
+                         dst_eth_addr="08:00:00:00:03:44", dst_ip_addr="10.0.100.40", src_mac_addr="08:00:00:00:01:01")
 
         # Write the rules that tunnel traffic from h2 to h1
         writeL3ForwardingRules(p4info_helper, ingress_sw=s2, port=1,
-                         dst_eth_addr="08:00:00:00:01:01", dst_ip_addr="10.0.1.10")
+                        dst_eth_addr="08:00:00:00:01:01", dst_ip_addr="10.0.1.10", src_mac_addr="08:00:00:00:02:02")
 
         # Write the rules that tunnel traffic from h2 to h3
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s2, port=2,
-                         dst_eth_addr="08:00:00:00:03:03", dst_ip_addr="10.0.100.30")
+        writeL3ForwardingRules(p4info_helper, ingress_sw=s2, port=1,
+                         dst_eth_addr="08:00:00:00:03:03", dst_ip_addr="10.0.100.30", src_mac_addr="08:00:00:00:02:02")
 
         # Write the rules that tunnel traffic from h2 to h4
         writeL3ForwardingRules(p4info_helper, ingress_sw=s2, port=2,
-                         dst_eth_addr="08:00:00:00:03:44", dst_ip_addr="10.0.100.40")
+                         dst_eth_addr="08:00:00:00:03:44", dst_ip_addr="10.0.100.40", src_mac_addr="08:00:00:00:02:02")
 
-        # Write the rules that tunnel traffic from h3 and h4  to h1
+        # Write the rules that tunnel traffic from h3 to h1
         writeL3ForwardingRules(p4info_helper, ingress_sw=s3, port=1,
-                         dst_eth_addr="08:00:00:00:01:01", dst_ip_addr="10.0.1.10")
+                         dst_eth_addr="08:00:00:00:01:01", dst_ip_addr="10.0.1.10", src_mac_addr="08:00:00:00:03:03")
 
-        # Write the rules that tunnel traffic from h3 and h4  to h2
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s3, port=2,
-                         dst_eth_addr="08:00:00:00:02:02", dst_ip_addr="10.0.2.20")
-
-        # Write the rules that tunnel traffic from s3 to h3
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s3, port=3,
-                         dst_eth_addr="08:00:00:00:03:03", dst_ip_addr="10.0.100.30")
-        # Write the rules that tunnel traffic from s3 to h4
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s3, port=4,
-                         dst_eth_addr="08:00:00:00:03:44", dst_ip_addr="10.0.100.40")
-        # Write the rules that tunnel traffic from s1 to h1
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s1, port=3,
-                         dst_eth_addr="08:00:00:00:01:01", dst_ip_addr="10.0.1.10")
-        # Write the rules that tunnel traffic from s2 to h2
-        writeL3ForwardingRules(p4info_helper, ingress_sw=s2, port=3,
-                         dst_eth_addr="08:00:00:00:02:02", dst_ip_addr="10.0.2.20")
-
+        # Write the rules that tunnel traffic from h3 to h2
+        writeL3ForwardingRules(p4info_helper, ingress_sw=s3, port=1,
+                        dst_eth_addr="08:00:00:00:02:02", dst_ip_addr="10.0.2.20", src_mac_addr="08:00:00:00:03:03")
 
         # Write the rules on the subnet with h3 and h4
         writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=3, dst_eth_addr="08:00:00:00:03:03")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=4, dst_eth_addr="08:00:00:00:03:44")
+        writeL2ForwardingRules(p4info_helper, ingress_sw=s2, port=3, dst_eth_addr="08:00:00:00:02:02")
+        writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=3, dst_eth_addr="08:00:00:00:01:01")
 
         readTableRules(p4info_helper, s1)
         readTableRules(p4info_helper, s2)

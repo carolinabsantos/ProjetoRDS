@@ -105,7 +105,7 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
 
-    action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
+    action ipv4_forward(macAddr_t dstAddr, egressSpec_t port, macAddr_t srcAddr) {
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
@@ -127,7 +127,7 @@ control MyIngress(inout headers hdr,
     action set_egress_port(egressSpec_t port_num) {
         standard_metadata.egress_spec = port_num;
     }
-    
+
     table L2_forwarding  {
         key = {
             hdr.ethernet.dstAddr: exact;
