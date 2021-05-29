@@ -1,10 +1,10 @@
 # IMPORTANT NOTE
-This tutorial is provided by https://github.com/p4lang/tutorials. The following directories were made by us:
-* g4_topology (./exercises/g4_topology)
-* g4_restrictions_topo (./exercises/g4_restrictions_topo)
-* g4_arp (./exercises/g4_rarp)
-* g4_arp_L2 (./exercises/g4_arp_L2)
-
+This tutorial was provided by https://github.com/p4lang/tutorials. 
+The following directories were made by us:
+* [g4_topology](./exercises/g4_topology)
+* [g4_restrictions_topo](./exercises/g4_restrictions_topo)
+* [g4_arp](./exercises/g4_rarp)
+* [g4_arp_L2](./exercises/g4_arp_L2)
 
 # P4 Tutorial
 
