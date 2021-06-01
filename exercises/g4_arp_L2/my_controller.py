@@ -180,15 +180,15 @@ def main(p4info_file_path, bmv2_file_path):
         print "Installed P4 Program using SetForwardingPipelineConfig on s3"
 
         writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=3, dst_eth_addr="08:00:00:00:01:01")
-        writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=1, dst_eth_addr="08:00:00:00:02:02")
-        writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=2, dst_eth_addr="08:00:00:00:03:03")
+        writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=2, dst_eth_addr="08:00:00:00:02:02")
+        writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=1, dst_eth_addr="08:00:00:00:03:03")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s1, port=2, dst_eth_addr="08:00:00:00:03:44")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s2, port=1, dst_eth_addr="08:00:00:00:01:01")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s2, port=3, dst_eth_addr="08:00:00:00:02:02")
-        writeL2ForwardingRules(p4info_helper, ingress_sw=s2, port=2, dst_eth_addr="08:00:00:00:03:03")
+        writeL2ForwardingRules(p4info_helper, ingress_sw=s2, port=1, dst_eth_addr="08:00:00:00:03:03")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s2, port=2, dst_eth_addr="08:00:00:00:03:44")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=1, dst_eth_addr="08:00:00:00:01:01")
-        writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=2, dst_eth_addr="08:00:00:00:02:02")
+        writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=1, dst_eth_addr="08:00:00:00:02:02")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=3, dst_eth_addr="08:00:00:00:03:03")
         writeL2ForwardingRules(p4info_helper, ingress_sw=s3, port=4, dst_eth_addr="08:00:00:00:03:44")
 
@@ -206,14 +206,14 @@ def main(p4info_file_path, bmv2_file_path):
         writeForwardingToHostRules(p4info_helper, ingress_sw=s3, dst_ip_addr="10.0.100.30", port=3)
         writeForwardingToHostRules(p4info_helper, ingress_sw=s3, dst_ip_addr="10.0.100.40", port=4)
 
-        writeArpReplyRules(p4info_helper, ingress_sw=s1, dst_ip_addr="10.0.100.20", port=1)
-        writeArpReplyRules(p4info_helper, ingress_sw=s1, dst_ip_addr="10.0.100.30", port=2)
+        writeArpReplyRules(p4info_helper, ingress_sw=s1, dst_ip_addr="10.0.100.20", port=2)
+        writeArpReplyRules(p4info_helper, ingress_sw=s1, dst_ip_addr="10.0.100.30", port=1)
         writeArpReplyRules(p4info_helper, ingress_sw=s1, dst_ip_addr="10.0.100.40", port=2)
-        writeArpReplyRules(p4info_helper, ingress_sw=s2, dst_ip_addr="10.0.100.30", port=2)
+        writeArpReplyRules(p4info_helper, ingress_sw=s2, dst_ip_addr="10.0.100.30", port=1)
         writeArpReplyRules(p4info_helper, ingress_sw=s2, dst_ip_addr="10.0.100.40", port=2)
         writeArpReplyRules(p4info_helper, ingress_sw=s2, dst_ip_addr="10.0.100.10", port=1)
         writeArpReplyRules(p4info_helper, ingress_sw=s3, dst_ip_addr="10.0.100.10", port=1)
-        writeArpReplyRules(p4info_helper, ingress_sw=s3, dst_ip_addr="10.0.100.20", port=2)
+        writeArpReplyRules(p4info_helper, ingress_sw=s3, dst_ip_addr="10.0.100.20", port=1)
 
         readTableRules(p4info_helper, s1)
         readTableRules(p4info_helper, s2)
